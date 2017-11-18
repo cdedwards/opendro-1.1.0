@@ -1,0 +1,5 @@
+Scott Shumate <scott@shuamtech.com>
+  Original author
+Steve Ward <steve@worldofward.com>
+  RPN Calculator
+

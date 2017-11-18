@@ -1,0 +1,49 @@
+Build Instructions
+------------------
+To build OpenDRO, you will need a development environment capable of cross-compiling the ARM7 source code.  The instructions included here will describe how to set up such an environment under Microsoft Windows.  OpenDRO can also be built with other operating systems such as Linux or OS X.
+
+To get started, you will need to install the following three components:
+  * Cygwin emulation environment
+  * GNUARM gcc cross compiler
+  * Atmel SAM-BA boot assistant
+
+Cygwin emulation environment
+----------------------------
+To install Cygwin, download the setup program at http://www.cygwin.com/setup.exe.  Save this to your system and run it.  The setup program will present a wizard-like interface.  Perform the following steps:
+  * Click next and choose the "Install from Internet" option.
+  * Click next and choose a root installation directory, who to install it for, and set the Default Text File Type to "Unix / binary".  It is strongly recommended to leave the root installation directory as c:\cygwin.
+  * Click next and choose a temporary download location for the packages.
+  * Click next and select the settings for your Internet connection.
+  * Click next and choose a download site.  Just choose any one that works.
+  * Click next and after downloading, you are presented with a list of packages.
+  * Open the list named "Devel"
+  * Select the following packages by clicking on the "Skip" text to change it to a version number.
+    * doxygen
+    * gcc
+    * make
+  * Click next to start download and installation.
+  * When installation is complete, click finish to exit.
+  
+GNUARM gcc cross-compiler
+-------------------------
+Download and run the GNUARM gcc 4.3.2 setup program from http://www.gnuarm.com/bu-2.17_gcc-4.1.1-c-c++_nl-1.14.0_gi-6.5.exe.  Click next until you get to the "Select Additional Tasks" screen.  Unselect "Install Cygwin DLLs" because we already installed them in the previous step.  Click next and begin the install.  The last screen has an option to add the excutables to the PATH.  Leave this selected and choose finish.
+
+Atmel SAM-BA boot assistant
+---------------------------
+SAM-BA is the program that loads the OpenDRO software into the Atmel ARM7 microcontroller.  Download the installation program at http://www.atmel.com/dyn/resources/prod_documents/Install AT91-ISP v1.12.exe.  Save and run the installation program and choose options appropriate for your system.
+
+Testing the build environment
+-----------------------------
+Open a Cygwin window by clicking on the Cygwin icon installed in your Start menu and/or desktop.  Type "arm-elf-gcc -v" and you should see output showing the version of GNUARM gcc cross-compiler.  If not, go back and check your installation.
+
+Build OpenDRO source code
+-------------------------
+The first step is to aquire the latest OpenDRO source code.  You can download it at the SourceForge site at http://opendro.sourceforge.net/.  Click on "Download OpenDRO files" and select the "opendro" package.  Download the file named opendro-<release>.tar.gz where <release> is the current OpenDRO release number.  Copy this file to your Cygwin home directory usually located at c:\cygwin\home\<username>.  You can navigate to this directory in Windows Explorer if you are unsure what your username is.  Open a Cygwin window and expand the source package by running "tar xzf <package name>".  You should now be able to "cd opendro-<release>" to enter the directory and type "make" to build the sources.  For example:
+$ tar xzf opendro-0.2.1.tar.gz
+$ cd opendro-0.2.1
+$ make
+
+Download OpenDRO binary
+-----------------------
+After the build completed, the binary image is placed in the bin/ subdirectory.  To download the binary to your DRO, follow the directions that are appropriate for your model at http://www.shumatech.com/web/products.
+

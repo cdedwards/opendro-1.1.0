@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:difx='http://schemas.microsoft.com/wix/DifxAppExtension'>
+  
+  <?define Manufacturer="ShumaTech"?>
+  <?define Product="OpenDRO"?>
+  <?define Version="1.0.0"?>
+
+  <Product Id="3a6befa3-7b47-4341-823e-d33080506ce8"
+           Name="$(var.Product) $(var.Version)"
+           Language="1033"
+           Version="$(var.Version)"
+           Manufacturer="$(var.Manufacturer)"
+           UpgradeCode="db462fbf-32e4-4934-94ff-5d3dbdab0c01">
+    
+    <Package Id="*"
+             InstallerVersion="200"
+             Compressed="yes"
+             InstallScope="perMachine" />
+
+    <Media Id="1"
+           Cabinet="opendro.cab"
+           EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR"
+               Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLDIR"
+                   Name="$(var.Product)">
+          <Component Id='Application'
+                     Guid='c892a78b-75ad-4ecf-b81e-857a4255f018'
+                     Win64='no'>
+            <File Id='VDRO550.exe'
+                  Name='VDRO550.exe'
+                  DiskId='1'
+                  Source='..\apps\VDRO550\VDRO550\bin\Release\VDRO550.exe' />
+          </Component>
+          <?if $(sys.BUILDARCH) != x64 ?>
+          <Directory Id="DriverFolder" Name="driver"/>
+          <?endif ?>
+        </Directory>
+      </Directory>
+      <?if $(sys.BUILDARCH) = x64 ?>
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLDIR64"
+                   Name="$(var.Product)">
+          <Directory Id="DriverFolder" Name="driver"/>
+        </Directory>
+      </Directory>
+      <?endif ?>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ProgramsFolder" Name="$(var.Product)"/>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="ProgramsFolder">
+      <Component Id="Shortcut"
+                 Guid="f2100e67-14a7-498c-8adc-1ee13fc8eea3">
+        <Shortcut Id="Uninstall"
+                  Name="Uninstall"
+                  Description="Uninstalls $(var.Product)"
+                  Target="[System64Folder]msiexec.exe"
+                  Arguments="/x [ProductCode]"/>
+        <Shortcut Id="StartMenuShortcut"
+                  Name="VDRO-550"
+                  Description="Virtual DRO-550 for OpenDRO"
+                  Target="[INSTALLDIR]VDRO550.exe"
+                  WorkingDirectory="INSTALLDIR"/>
+        <RemoveFolder Id="ProgramsFolder"
+                      On="uninstall"/>
+        <RegistryValue Root="HKMU"
+                       Key="Software\$(var.Manufacturer)\$(var.Product)"
+                       Name="installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DriverFolder">
+      <Component Id='Driver'
+                 Guid='c03b2d39-90d8-432d-8022-2bebe9447f5e'>
+          <File Id='opendro.inf'
+                Name='opendro.inf'
+                DiskId='1'
+                Source='opendro.inf' />
+          <difx:Driver Legacy='yes'
+                       ForceInstall='yes'
+                       PlugAndPlayPrompt='no'
+                       AddRemovePrograms='no' />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="MainFeature"
+             Title="$(var.Product)"
+             Level="1">
+      <ComponentRef Id="Application" />
+      <ComponentRef Id="Driver" />
+      <ComponentRef Id="Shortcut" />
+    </Feature>
+    
+    <MajorUpgrade DowngradeErrorMessage="A later version of $(var.Product) is already installed. Setup will now exit."/>
+
+    <?if $(sys.BUILDARCH) != x64 ?>
+    <Condition Message="This installer only supports 32 bit versions of Windows.  You must use the 64 bit installer instead.">
+      NOT VersionNT64
+    </Condition>
+    <?endif ?>
+    
+    <Property Id="WIXUI_INSTALLDIR"
+              Value="INSTALLDIR" />
+
+    <WixVariable Id="WixUILicenseRtf"
+                 Value="license.rtf" />
+
+    <UIRef Id="WixUI_InstallDir"/>
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+  </Product>
+</Wix>

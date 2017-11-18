@@ -1,0 +1,48 @@
+[Version]                                                       ; Version section
+Signature="$Chicago$"                                           ; All Windows versions
+Class=Ports                                                     ; This is a serial port driver
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318}                ; Associated GUID
+Provider=%SHUMATECH%                                            ; Driver is provided by SHUMATECH
+DriverVer=04/01/2011,1.0.0                                      ; Driver version
+
+[DestinationDirs]                                               ; DestinationDirs section
+DefaultDestDir=12                                               ; Default install directory is \drivers or \IOSubSys
+
+[Manufacturer]                                                  ; Manufacturer section
+%SHUMATECH%=ShumaTech,NTamd64                                   ; Only one manufacturer (SHUMATECH), models section is named
+                                                                ; ShumaTech
+
+[ShumaTech]                                                     ; Models section corresponding to SHUMATECH
+%OPENDRO%=OPENDRO.Install,USB\VID_03EB&PID_f550                 ; Identifies a device with Vendor ID (03EBh) and
+                                                                ; Product ID equal to f550h. Corresponding Install section
+                                                                ; is named OPENDRO.Install
+
+[ShumaTech.NTamd64]                                             ; Models section corresponding to SHUMATECH
+%OPENDRO%=OPENDRO.Install,USB\VID_03EB&PID_f550                 ; Identifies a device with Vendor ID (03EBh) and
+                                                                ; Product ID equal to f550h. Corresponding Install section
+                                                                ; is named OPENDRO.Install
+
+[OPENDRO.Install]                                               ; Install section
+include=mdmcpq.inf
+CopyFiles=FakeModemCopyFileSection
+AddReg=OPENDRO.AddReg                                           ; Registry keys to add are listed in OPENDRO.AddReg
+
+[OPENDRO.AddReg]                                                ; AddReg section
+HKR,,DevLoader,,*ntkern                                         ;
+HKR,,NTMPDriver,,usbser.sys
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+[OPENDRO.Install.Services]                                      ; Services section
+AddService=usbser,0x00000002,OPENDRO.AddService                 ; Assign usbser as the PnP driver for the device
+
+[OPENDRO.AddService]                                            ; Service install section
+DisplayName=%USBSer%                                            ; Name of the serial driver
+ServiceType=1                                                   ; Service kernel driver
+StartType=3                                                     ; Driver is started by the PnP manager
+ErrorControl=1                                                  ; Warn about errors
+ServiceBinary=%12%\usbser.sys                                   ; Driver filename
+
+[Strings]                                                       ; Strings section
+SHUMATECH="ShumaTech"                                           ; String value for the SHUMATECH symbol
+OPENDRO="OpenDRO Automation Port"                               ; String value for the OPENDRO symbol
+USBSer="USB Serial Driver"                                      ; String value for the USBSer symbol

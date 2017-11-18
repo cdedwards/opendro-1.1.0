@@ -1,0 +1,193 @@
+Release Notes
+-------------
+
+Release 1.1.0
+-------------
+* DRO-375 support
+* Fixed block calculation problem with SDHC cards
+* Fixed zeros -> zeroa Lua function typo
+* Fixed bug with display.readget() missing the last digit when the tool compensation indicator is on.
+* Lua patch to handle undefined tools (Al Testani)
+* Added prompt setup parameter to control display of prompts like tool edge
+* Added several new Lua functions (Al Testani)
+* Made some Lua functions return a value if no parameters are given (Al Testani)
+* Fixed problem always reverting to machine 1 after a reboot
+* Added system.silent() to temporarily not show prompts
+
+Release 1.0.0
+-------------
+* SD card driver including SDv1, SDv2, and SDHC support (DRO-550 only)
+* ChanN's FatFS FAT file system for FAT12, FAT16, and FAT32
+* diskio wrapper to interface between FatFs and the SD card driver
+* Save and load the OpenDRO config on the SD card
+* Made the scale auto on threshold configurable with a default of 0.01"
+* All keypad input functions now start with previous value
+* Incremental mode for keypad input using ABS/INCR key
+* Set an absolute zero at an absolute position by hitting PRESET after ZERO in ABS mode
+* An incremental preset is now offset from the incremental zero instead of the current position
+* Edge beep setting to beep when edge finder contact is made
+* Fixed problem with grid calculations
+* Fractional axis precision to show reading in 64ths fractions
+* Unified serial and USB standard I/O
+* Integrated Lua programming language
+    * Core Lua taken from eLua project with tiny RAM and emergency garbage collection patches
+    * OpenDRO objects represented as Lua tables
+    * New OpenDRO objects: axis, config. display, function, keypad, machine, mem, scale, sd, system, trace
+    * Most standard Lua library functions
+    * Execute user Lua functions with FUNC-FUNC key press
+    * Autoexec Lua script executed on boot up
+* Advanced Lua shell on RS-232/USB interfaces
+    * Full command-line editing (arrow keys, home, end, etc.)
+    * Command history with up down arrow keys
+    * Context-sensitive command completion with tab key
+
+Release 0.4.0
+-------------
+* 21 bit protocol scales from iGaging
+* Generate 21 bit protocol scale master clock on PWM port (DRO-550)
+* Generate 21 bit protocol scale master clock on TACH 2 port (DPU-550)
+* Tachometer divisor machine config setting
+* Prompt for axis when selecting diameter mode
+* Allow filter for all non-quadrature scales
+* Fixed problem with CLI output going to serial console on USB sessions
+* Minor porting issues with Code Sourcery gcc compiler
+
+Release 0.3.2
+-------------
+* Added menustate CLI command for VDRO-550 application
+* Fixed buffer overrun problem in display when entering fractions
+* Updated VDRO-550 to work with the latest CLI changes
+* Fixed pull-up problem on DPU-550 that causes scale 3 to not function
+* Enhanced scale filter with an adaptive moving average algorithm
+* Added scale weighting scheme to improve autodetection of glitchy scales
+* Fixed radius problem when end angle is less than start angle
+* Restore trace level to info on VDRO-550 exit
+* Fixed issue on DPU-550 with Chinese scales not entering fast mode
+* Refactored the radius angle validation logic
+
+Release 0.3.1
+-------------
+* Fix for watchdog firing when using the calculator
+* Added release number to update config message at start-up
+* Fixed LCD label subscript for feed rate
+* Added some headers missing from the 0.3.0 check-in
+* Changed the confirmation message for erase and update
+* Changed speed keys to match new overlay design
+* Added auto-off function in machine setup (defaults to off)
+* Scale movement also resets auto-off timer and wakes up DRO
+* Replaced CLI command "machine start" with "machine on"
+* Replaced CLI command "machine stop" with "machine off"
+* RPN calculator enhancements (Steve Ward)
+* Combined keypad_get_float and keypad_get_raw_float to simplify code
+* Fixed problem with watchdog firing during config update with tool selected
+* Modified LCD and SD card gpio definitions to match LCD-200 PCB
+* Factional number entry using a decimal to separate numerator and denominator (Steve Ward)
+* Memory in and out RPN calculator operations (Steve Ward)
+* Speed keys for RPN calculator operations (Steve Ward)
+* Radius feature to cut step by step over a convex or concave radius
+
+Release 0.3.0
+-------------
+* Added platform support for the new features on the DRO-550
+* Included new Chinese scale auto-detection feature
+* Display intensity now displayed in percent
+* Reworked workspace handling so that it is saved
+* Refactored the display object to use drivers and multiple displays
+* Abstracted the reading and menu displays from the physical display
+* Changed makefile to support platform configs
+* Update CLI commands to match new display functions
+* Added a couple of new CLI commands
+* Added auxiliary LCD display support using drivers
+* Added LCD driver for the GDM12864 graphical LCD display
+* Added status display to LCD that shows several DRO parameters
+* Added axis label display function for the LCD
+* Fixed a bug with restoring state when switching between machines
+* Fixed a bug setting the machine on boot
+* Fixed a bug with setting diameter mode 
+* Fixed a bug with showing readings with zero precision
+* Fixed a bug with CLI echo config
+
+Release 0.2.5
+-------------
+* Improved tach zero handling to show 0 instead of "inf" if no tach is connected
+* Added a watchdog timer to reset the DRO in case of software lock-up
+* Changed the CLI and trace output to use CR/LF instead of just LF
+* Stack dump now checks for valid stack
+* Fixed erase config bug
+
+Release 0.2.4
+-------------
+* Changed build system to generate seprate binary images for the DPU-550 full and lite.
+* Fixed limits when building DPU-550 lite
+* Changed behavior of zero warning to never trigger after a key press
+* Fixed bug in grid hole calculations
+
+Release 0.2.3
+-------------
+* Support piezo beeper on the tach port
+* Zero warn beeps three times if piezo is configured
+* Option to beep when keys are pressed
+* New cli commands for axis, scale, machine, and function to show current state
+* Changed zero warn display blink to flash three times and stop instead of continuously blinking
+* Fixed bug where axis reverse and LEC are not accounted for when zeroing
+* 24bit scale protocol now waits for the last edge to avoid a small glitch window after first bit
+* Fixed bug setting scale CPI in setup if canceled
+* Addressed issue with averaging filter size
+
+Release 0.2.2
+-------------
+* Added undef for undefined tools, boltholes, and grids
+* Display range (or "input" if too big) when entering numbers
+* Display "error" and wait for any key press if an invalid number is entered
+* FUNC exits bolthole or grid immediately
+* Grid bug fix for holes == 1
+* Axis zeroing bug fix when reversed
+* Removed flicker for leading and trailing decimals
+* Display tool number in middle of circle for edge selection
+* Change tool circle display time
+* Fixed a bug in the return code of keypad_get_float
+
+Release 0.2.1
+-------------
+* The left-most decimal in the display now indicates that an axis is offset from its true position
+* Fixed a problem when changing machines and dynamic functions were not updated
+* Added a visual representation for which edge is being compensated
+* Allowed definition of only 1 row of holes for a grid pattern
+* Fixed a bug calculating the grid hole positions with an angle
+* Tweaked the build instructions
+
+Release 0.2.0
+-------------
+* Added USB CDC driver for serial communications over USB
+* Added command-line interface accessible over both the console and USB
+* New VDRO-350 Windows application written in Visual C#
+* Made gensig.sh more compatible
+* Generalized the fifo implementation
+* Separated SWI handler in its own file and added read/open/close support
+* Console input is now handled through stdin
+* Enhanced the trace and made it compatible with USB stack's requirements
+* Separated and enhanced assert
+* USB CDC read/write through clib via usbin and usbout files
+* Made console interrupt-based
+* Updated Atmel support headers to newest version
+* Machine edge finder setup can use either tach input or be turned off entirely
+* Adjusted PLL to reduce error on USB clock
+* Fixed a problem on the hole grid function where the angle was not taken into the calculation
+* Allowed the zero keys to move backwards through the menus
+* Added speed keys (FUNC-#) presses to give close to the same function as on the original software
+* Added power off to blank the display and wait for a keypress
+* Fixed bug with restoration of mm indicator on power up
+* Fixed a bug in the USB stack to protect a critical region when checking for transmit completion
+* Enhanced makefile to include a module.mk for each subdirectory rather than glob source files
+* Reduced console baud from 115200 to 57600 to avoid an occasional character overflow
+* Included liability and license notifications in start-up console display
+* Refactored the function object's handling of different machine types
+* Improved build instructions
+* Reorganized menus
+* Increased speed of config by adding a write-through cache
+* Fixed some issues with the functions
+
+Release 0.1.1
+-------------
+Initial release
+
